@@ -22,10 +22,10 @@ class MJLinkingTile {
     ));
   }
 
-  function theOutput($attributes) {
+  function theOutput($attributes, $content) {
     ob_start(); ?>
-    <div>
-      This is the output
+    <div style="background-image: url(<?php echo $attributes["imageUrl"] ?>); background-repeat: no-repeat; background-size: cover; padding-top: <?php echo $attributes["paddingTop"] ? $attributes["paddingTop"] : 20 ?>px; padding-bottom: <?php echo $attributes["paddingBottom"] ? $attributes["paddingBottom"] : 20 ?>px">
+      <?php echo $content ?>
     </div>
     <?php return ob_get_clean();
   }
