@@ -12,10 +12,10 @@ wp.blocks.registerBlockType("mj/linking-tile", {
   ),
   category: "common",
   attributes: {
-    imageUrl: { type: "string", default: undefined },
+    imageUrl: { type: "string" },
     paddingTop: { type: "number", default: 20 },
     paddingBottom: { type: "number", default: 20 },
-    link: { type: "string", default: "" },
+    link: { type: "string" },
     target: { type: "string" },
     popoverVisible: { type: "boolean", default: false },
     backgroundColor: { type: "string" },

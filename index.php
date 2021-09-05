@@ -22,11 +22,30 @@ class MJLinkingTile {
     ));
   }
 
+  function stylecheck($attributes) {
+    $styles = "";
+
+    if($attributes["imageUrl"]) {
+      $img = $attributes["imageUrl"];
+      $styles = $styles . "background-image: url({$img}); background-repeat: no-Repeat; background-size: cover; ";
+    } if($attributes["backgroundColor"]) {
+      $color = $attributes["backgroundColor"];
+      $styles = $styles . "background-color: {$color}; ";
+    }
+    $attributes["paddingTop"] ? $styles = $styles . "padding-top: {$attributes["paddingTop"]}px; " : $styles = $styles . "padding-top: 20px; ";
+    $attributes["paddingBottom"] ? $styles = $styles . "padding-bottom: {$attributes["paddingBottom"]}px; " : $styles = $styles . "padding-bottom: 20px; ";
+    $attributes["opacity"] ? $styles = $styles . "opacity: {$attributes["opacity"]}; " : $styles = $styles . "opacity: 1; ";
+    echo $styles;
+  }
+
   function theOutput($attributes, $content) {
+
     ob_start(); ?>
-    <div style="background-image: url(<?php echo $attributes["imageUrl"] ?>); background-repeat: no-repeat; background-size: cover; padding-top: <?php echo $attributes["paddingTop"] ? $attributes["paddingTop"] : 20 ?>px; padding-bottom: <?php echo $attributes["paddingBottom"] ? $attributes["paddingBottom"] : 20 ?>px">
-      <?php echo $content ?>
-    </div>
+    <?php echo $attributes["link"] ? "<a href={$attributes["link"]} target={$attributes["target"]} >" : "" ?>
+      <div style="<?php $this->stylecheck($attributes); ?>">
+        <?php echo $content ?>
+      </div>
+    <?php echo $attributes["link"] ? "</a>" : "" ?>
     <?php return ob_get_clean();
   }
 }

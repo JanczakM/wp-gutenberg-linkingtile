@@ -204,8 +204,7 @@ wp.blocks.registerBlockType("mj/linking-tile", {
   category: "common",
   attributes: {
     imageUrl: {
-      type: "string",
-      default: undefined
+      type: "string"
     },
     paddingTop: {
       type: "number",
@@ -216,8 +215,7 @@ wp.blocks.registerBlockType("mj/linking-tile", {
       default: 20
     },
     link: {
-      type: "string",
-      default: ""
+      type: "string"
     },
     target: {
       type: "string"
