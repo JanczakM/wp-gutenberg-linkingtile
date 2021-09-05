@@ -1,6 +1,7 @@
-import { Button } from "@wordpress/components"
-import { MediaUpload, MediaUploadCheck, InspectorControls, InnerBlocks, useBlockProps } from "@wordpress/block-editor"
-import { Panel, PanelBody, __experimentalNumberControl as NumberControl } from "@wordpress/components"
+import { Button, ToggleControl } from "@wordpress/components"
+import { MediaUpload, MediaUploadCheck, InspectorControls, InnerBlocks, useBlockProps, BlockControls, URLPopover, URLInput } from "@wordpress/block-editor"
+import { link } from "@wordpress/icons"
+import { Panel, PanelBody, Toolbar, ToolbarButton, ColorPicker, __experimentalNumberControl as NumberControl, RangeControl } from "@wordpress/components"
 
 wp.blocks.registerBlockType("mj/linking-tile", {
   title: "Linking tile",
@@ -13,7 +14,12 @@ wp.blocks.registerBlockType("mj/linking-tile", {
   attributes: {
     imageUrl: { type: "string", default: undefined },
     paddingTop: { type: "number", default: 20 },
-    paddingBottom: { type: "number", default: 20 }
+    paddingBottom: { type: "number", default: 20 },
+    link: { type: "string", default: "" },
+    target: { type: "string" },
+    popoverVisible: { type: "boolean", default: false },
+    backgroundColor: { type: "string" },
+    opacity: { type: "number", default: 1 }
   },
   edit: Edit,
   save: function (props) {
@@ -36,9 +42,63 @@ function Edit(props) {
     props.setAttributes({ paddingBottom: parseInt(paddingBottom) })
   }
 
+  function setLink(url, post) {
+    post ? props.setAttributes({ link: post.url }) : props.setAttributes({ link: url })
+  }
+
+  function setBackgroundColor(value) {
+    props.setAttributes({ backgroundColor: value.hex })
+  }
+
+  function setOpacity(value) {
+    props.setAttributes({ opacity: value })
+  }
+
+  function removeImage() {
+    props.setAttributes({ imageUrl: "" })
+  }
+
+  const styles = {
+    withImage: {
+      backgroundImage: `url(${props.attributes.imageUrl})`,
+      backgroundRepeat: "no-Repeat",
+      backgroundSize: "cover"
+    },
+    withColor: {
+      backgroundColor: props.attributes.backgroundColor
+    },
+    base: {
+      paddingTop: `${props.attributes.paddingTop}px`,
+      paddingBottom: `${props.attributes.paddingBottom}px`,
+      opacity: props.attributes.opacity
+    }
+  }
+
+  function selectStyle() {
+    let selectedStyles = {}
+    if (props.attributes.imageUrl) {
+      selectedStyles = Object.assign(selectedStyles, styles.withImage)
+    }
+    if (props.attributes.backgroundColor) {
+      selectedStyles = Object.assign(selectedStyles, styles.withColor)
+    }
+    selectedStyles = Object.assign(selectedStyles, styles.base)
+    return selectedStyles
+  }
+
   return (
-    <div {...useBlockProps()} style={props.attributes.imageUrl ? { backgroundImage: `url(${props.attributes.imageUrl})`, paddingTop: `${props.attributes.paddingTop}px`, paddingBottom: props.attributes.paddingBottom, backgroundRepeat: "no-Repeat", backgroundSize: "cover" } : { paddingTop: props.attributes.paddingTop, paddingBottom: `${props.attributes.paddingBottom}px` }}>
+    <div {...useBlockProps()} style={selectStyle()}>
       <InnerBlocks allowedBlocks={ALLOWED_BLOCKS} />
+      <BlockControls>
+        <Toolbar label="Options">
+          <ToolbarButton icon={link} label="Link" onClick={() => props.setAttributes({ popoverVisible: true })} />
+          {props.attributes.popoverVisible && (
+            <URLPopover onClose={() => props.setAttributes({ popoverVisible: false })} renderSettings={() => <ToggleControl label="Open in new tab" checked={props.attributes.target == "_blank"} onChange={() => (props.attributes.target ? props.setAttributes({ target: "" }) : props.setAttributes({ target: "_blank" }))} />}>
+              <URLInput onChange={setLink} value={props.attributes.link} />
+            </URLPopover>
+          )}
+        </Toolbar>
+      </BlockControls>
       <InspectorControls>
         <Panel>
           <PanelBody title="BackgroundImage">
@@ -54,10 +114,21 @@ function Edit(props) {
                 )}
               />
             </MediaUploadCheck>
+            <Button onClick={removeImage}>Remove image</Button>
           </PanelBody>
         </Panel>
         <Panel>
-          <PanelBody title="paddings">
+          <PanelBody title="Background color">
+            <ColorPicker color={props.attributes.backgroundColor} onChangeComplete={setBackgroundColor} disableAlpha />
+          </PanelBody>
+        </Panel>
+        <Panel>
+          <PanelBody title="Opacity">
+            <RangeControl label="opacity" value={props.attributes.opacity} onChange={setOpacity} min={0} max={1} step={0.1} />
+          </PanelBody>
+        </Panel>
+        <Panel>
+          <PanelBody title="Paddings">
             <NumberControl label="Padding top (px)" value={props.attributes.paddingTop} onChange={setPaddingTop} />
             <NumberControl label="Padding bottom (px)" value={props.attributes.paddingBottom} onChange={setPaddingBottom} />
           </PanelBody>
