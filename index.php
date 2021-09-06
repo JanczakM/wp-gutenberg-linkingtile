@@ -29,22 +29,26 @@ class MJLinkingTile {
 
     if($attributes["imageUrl"]) {
       $img = $attributes["imageUrl"];
-      $styles = $styles . "background-image: url({$img}); background-repeat: no-Repeat; background-size: cover; ";
+      $darken = $attributes["darken"] ? $attributes["darken"] : 0;
+      $styles = $styles . "background-image: linear-gradient(rgba(0, 0, 0, {$darken}), rgba(0, 0, 0, {$darken})), url({$img}); background-repeat: no-Repeat; background-size: cover; ";
     } if($attributes["backgroundColor"]) {
       $color = $attributes["backgroundColor"];
       $styles = $styles . "background-color: {$color}; ";
     }
     $attributes["paddingTop"] ? $styles = $styles . "padding-top: {$attributes["paddingTop"]}px; " : $styles = $styles . "padding-top: 20px; ";
     $attributes["paddingBottom"] ? $styles = $styles . "padding-bottom: {$attributes["paddingBottom"]}px; " : $styles = $styles . "padding-bottom: 20px; ";
-    $attributes["opacity"] ? $styles = $styles . "opacity: {$attributes["opacity"]}; " : $styles = $styles . "opacity: 1; ";
     echo $styles;
   }
 
   function theOutput($attributes, $content) {
+    if(!is_admin()) {
+      wp_enqueue_script('mjlinkingtilefrontendscript', plugin_dir_url(__FILE__). 'build/frontend.js');
+      wp_enqueue_style('mjlinkingtilefrontstyle', plugin_dir_url(__FILE__). 'build/frontend.css');
+    }
 
     ob_start(); ?>
     <?php echo $attributes["link"] ? "<a href={$attributes["link"]} target={$attributes["target"]} >" : "" ?>
-      <div style="<?php $this->stylecheck($attributes); ?>">
+      <div style="<?php $this->stylecheck($attributes); ?>" class="mj-linkingtile">
         <?php echo $content ?>
       </div>
     <?php echo $attributes["link"] ? "</a>" : "" ?>

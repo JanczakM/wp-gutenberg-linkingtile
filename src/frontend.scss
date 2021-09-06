@@ -1,12 +1,3 @@
-.fullwidth-panel {
-  flex: 1;
-}
-
-.mj-linkingtile {
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
 .mj-linkingtile p,
 .mj-linkingtile h1,
 .mj-linkingtile h2,
@@ -14,5 +5,10 @@
 .mj-linkingtile h4,
 .mj-linkingtile h5,
 .mj-linkingtile h6 {
-  margin: 0 !important;
+  margin: 0;
+}
+
+.mj-linkingtile {
+  padding-left: 10px;
+  padding-right: 10px;
 }

@@ -2,7 +2,7 @@ import "./index.scss"
 import { Button, ToggleControl } from "@wordpress/components"
 import { MediaUpload, MediaUploadCheck, InspectorControls, InnerBlocks, useBlockProps, BlockControls, URLPopover, URLInput } from "@wordpress/block-editor"
 import { link } from "@wordpress/icons"
-import { Panel, PanelBody, PanelRow, Toolbar, ToolbarButton, ColorPicker, __experimentalNumberControl as NumberControl, RangeControl } from "@wordpress/components"
+import { Panel, PanelBody, PanelRow, ToolbarGroup, ToolbarButton, ColorPicker, __experimentalNumberControl as NumberControl, RangeControl } from "@wordpress/components"
 
 wp.blocks.registerBlockType("mj/linking-tile", {
   title: "Linking tile",
@@ -87,17 +87,17 @@ function Edit(props) {
   }
 
   return (
-    <div {...useBlockProps()} style={selectStyle()}>
+    <div {...useBlockProps()} style={selectStyle()} className="mj-linkingtile">
       <InnerBlocks allowedBlocks={ALLOWED_BLOCKS} />
       <BlockControls>
-        <Toolbar label="Options">
+        <ToolbarGroup label="Options">
           <ToolbarButton icon={link} label="Link" onClick={() => props.setAttributes({ popoverVisible: true })} />
           {props.attributes.popoverVisible && (
             <URLPopover onClose={() => props.setAttributes({ popoverVisible: false })} renderSettings={() => <ToggleControl label="Open in new tab" checked={props.attributes.target == "_blank"} onChange={() => (props.attributes.target ? props.setAttributes({ target: "" }) : props.setAttributes({ target: "_blank" }))} />}>
               <URLInput onChange={setLink} value={props.attributes.link} />
             </URLPopover>
           )}
-        </Toolbar>
+        </ToolbarGroup>
       </BlockControls>
       <InspectorControls>
         <Panel>
