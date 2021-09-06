@@ -22,6 +22,18 @@ wp.blocks.registerBlockType("mj/linking-tile", {
     backgroundColor: { type: "string" },
     darken: { type: "number", default: 0 }
   },
+  example: {
+    attributes: {
+      imageUrl: "https://aktywnepodroze.pl/wp-content/uploads/2021/08/gr-222-szlak.jpg",
+      paddingTop: 50,
+      paddingBottom: 50,
+      link: "",
+      target: "",
+      popoverVisible: false,
+      backgroundColor: "#FF9D00",
+      darken: 0
+    }
+  },
   edit: Edit,
   save: function (props) {
     return <InnerBlocks.Content />

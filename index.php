@@ -2,7 +2,7 @@
 
 /*
 Plugin Name: Linking Tile Block
-Description: A tile with the image in the background and link
+Description: A tile with color or image background. Tile can link to other site and have text inside.
 Version: 1.0
 Author: MJ
 */
@@ -28,11 +28,11 @@ class MJLinkingTile {
     $styles = "";
 
     if($attributes["imageUrl"]) {
-      $img = $attributes["imageUrl"];
+      $img = esc_url($attributes["imageUrl"]);
       $darken = $attributes["darken"] ? $attributes["darken"] : 0;
       $styles = $styles . "background-image: linear-gradient(rgba(0, 0, 0, {$darken}), rgba(0, 0, 0, {$darken})), url({$img}); background-repeat: no-Repeat; background-size: cover; ";
     } if($attributes["backgroundColor"]) {
-      $color = $attributes["backgroundColor"];
+      $color = esc_html($attributes["backgroundColor"]);
       $styles = $styles . "background-color: {$color}; ";
     }
     $attributes["paddingTop"] ? $styles = $styles . "padding-top: {$attributes["paddingTop"]}px; " : $styles = $styles . "padding-top: 20px; ";
@@ -46,12 +46,14 @@ class MJLinkingTile {
       wp_enqueue_style('mjlinkingtilefrontstyle', plugin_dir_url(__FILE__). 'build/frontend.css');
     }
 
+    $link = esc_url($attributes["link"]);
+
     ob_start(); ?>
-    <?php echo $attributes["link"] ? "<a href={$attributes["link"]} target={$attributes["target"]} >" : "" ?>
+    <?php echo $link ? "<a href={$link} target={$attributes["target"]} >" : "" ?>
       <div style="<?php $this->stylecheck($attributes); ?>" class="mj-linkingtile">
         <?php echo $content ?>
       </div>
-    <?php echo $attributes["link"] ? "</a>" : "" ?>
+    <?php echo $link ? "</a>" : "" ?>
     <?php return ob_get_clean();
   }
 }
