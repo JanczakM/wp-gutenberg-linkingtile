@@ -15,9 +15,11 @@ class MJLinkingTile {
   }
 
   function adminAssets() {
-    wp_register_script('mjlinkingtile', plugin_dir_url(__FILE__) . 'build/index.js', array('wp-blocks', 'wp-element', 'wp-editor'));
+    wp_register_style('mjlinkingtilestyle', plugin_dir_url(__FILE__) . 'build/index.css');
+    wp_register_script('mjlinkingtilescript', plugin_dir_url(__FILE__) . 'build/index.js', array('wp-blocks', 'wp-element', 'wp-editor'));
     register_block_type('mj/linking-tile', array(
-      'editor_script' => 'mjlinkingtile',
+      'editor_script' => 'mjlinkingtilescript',
+      'editor_style' => 'mjlinkingtilestyle',
       'render_callback' => array($this, 'theOutput')
     ));
   }

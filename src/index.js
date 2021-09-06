@@ -1,7 +1,8 @@
+import "./index.scss"
 import { Button, ToggleControl } from "@wordpress/components"
 import { MediaUpload, MediaUploadCheck, InspectorControls, InnerBlocks, useBlockProps, BlockControls, URLPopover, URLInput } from "@wordpress/block-editor"
 import { link } from "@wordpress/icons"
-import { Panel, PanelBody, Toolbar, ToolbarButton, ColorPicker, __experimentalNumberControl as NumberControl, RangeControl } from "@wordpress/components"
+import { Panel, PanelBody, PanelRow, Toolbar, ToolbarButton, ColorPicker, __experimentalNumberControl as NumberControl, RangeControl } from "@wordpress/components"
 
 wp.blocks.registerBlockType("mj/linking-tile", {
   title: "Linking tile",
@@ -19,7 +20,7 @@ wp.blocks.registerBlockType("mj/linking-tile", {
     target: { type: "string" },
     popoverVisible: { type: "boolean", default: false },
     backgroundColor: { type: "string" },
-    opacity: { type: "number", default: 1 }
+    darken: { type: "number", default: 0 }
   },
   edit: Edit,
   save: function (props) {
@@ -50,8 +51,8 @@ function Edit(props) {
     props.setAttributes({ backgroundColor: value.hex })
   }
 
-  function setOpacity(value) {
-    props.setAttributes({ opacity: value })
+  function setDarken(value) {
+    props.setAttributes({ darken: value })
   }
 
   function removeImage() {
@@ -60,17 +61,16 @@ function Edit(props) {
 
   const styles = {
     withImage: {
-      backgroundImage: `url(${props.attributes.imageUrl})`,
-      backgroundRepeat: "no-Repeat",
-      backgroundSize: "cover"
+      backgroundRepeat: "no-repeat",
+      backgroundSize: "cover",
+      backgroundImage: `linear-gradient(rgba(0, 0, 0, ${props.attributes.darken}), rgba(0, 0, 0, ${props.attributes.darken})), url(${props.attributes.imageUrl})`
     },
     withColor: {
       backgroundColor: props.attributes.backgroundColor
     },
     base: {
       paddingTop: `${props.attributes.paddingTop}px`,
-      paddingBottom: `${props.attributes.paddingBottom}px`,
-      opacity: props.attributes.opacity
+      paddingBottom: `${props.attributes.paddingBottom}px`
     }
   }
 
@@ -101,20 +101,25 @@ function Edit(props) {
       </BlockControls>
       <InspectorControls>
         <Panel>
-          <PanelBody title="BackgroundImage">
-            <MediaUploadCheck>
-              <MediaUpload
-                onSelect={setImage}
-                allowedTypes="image"
-                value={props.attributes.imageUrl}
-                render={({ open }) => (
-                  <Button className="is-primary" onClick={open}>
-                    Choose image
-                  </Button>
-                )}
-              />
-            </MediaUploadCheck>
-            <Button onClick={removeImage}>Remove image</Button>
+          <PanelBody title="Background image">
+            <PanelRow>
+              <MediaUploadCheck>
+                <MediaUpload
+                  onSelect={setImage}
+                  allowedTypes="image"
+                  value={props.attributes.imageUrl}
+                  render={({ open }) => (
+                    <Button className="is-primary" onClick={open}>
+                      Choose image
+                    </Button>
+                  )}
+                />
+              </MediaUploadCheck>
+              <Button onClick={removeImage}>Remove image</Button>
+            </PanelRow>
+            <PanelRow>
+              <RangeControl label="Dark overlay" value={props.attributes.darken} onChange={setDarken} min={0} max={1} step={0.1} className="fullwidth-panel" />
+            </PanelRow>
           </PanelBody>
         </Panel>
         <Panel>
@@ -123,14 +128,13 @@ function Edit(props) {
           </PanelBody>
         </Panel>
         <Panel>
-          <PanelBody title="Opacity">
-            <RangeControl label="opacity" value={props.attributes.opacity} onChange={setOpacity} min={0} max={1} step={0.1} />
-          </PanelBody>
-        </Panel>
-        <Panel>
           <PanelBody title="Paddings">
-            <NumberControl label="Padding top (px)" value={props.attributes.paddingTop} onChange={setPaddingTop} />
-            <NumberControl label="Padding bottom (px)" value={props.attributes.paddingBottom} onChange={setPaddingBottom} />
+            <PanelRow>
+              <NumberControl label="Padding top (px)" value={props.attributes.paddingTop} onChange={setPaddingTop} />
+            </PanelRow>
+            <PanelRow>
+              <NumberControl label="Padding bottom (px)" value={props.attributes.paddingBottom} onChange={setPaddingBottom} />
+            </PanelRow>
           </PanelBody>
         </Panel>
       </InspectorControls>

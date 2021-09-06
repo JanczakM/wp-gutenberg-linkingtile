@@ -1,0 +1,1 @@
+{"version":3,"file":"index.css","mappings":";;;AAAA;EACE;AACF,C","sources":["webpack://linking-tile/./src/index.scss"],"sourcesContent":[".fullwidth-panel {\n  flex: 1;\n}\n"],"names":[],"sourceRoot":""}
